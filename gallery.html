@@ -38,7 +38,7 @@
     </ul>
   </nav>
 
-  <!-- Filter Buttons -->
+  <!-- Filter + Search -->
   <section class="px-6 py-12">
     <div class="flex justify-center gap-4 flex-wrap mb-8">
       <button onclick="filterSongs('all')" class="bg-gray-700 px-4 py-2 rounded hover:bg-purple-500">All</button>
@@ -47,7 +47,6 @@
       <button onclick="filterSongs('tamil')" class="bg-green-600 px-4 py-2 rounded hover:bg-green-700">Tamil</button>
     </div>
 
-    <!-- Search Bar -->
     <div class="mb-8 max-w-md mx-auto">
       <input
         type="text"
@@ -58,31 +57,27 @@
       />
     </div>
 
-    <!-- Songs Grid -->
+    <!-- 🎵 Manual Songs Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="songContainer">
-
-      <!-- Song 1 - Hindi -->
       <div class="song-card bg-gray-900 p-4 rounded-lg shadow-lg" data-language="hindi">
         <iframe class="w-full rounded aspect-video" src="https://www.youtube.com/embed/xyz1" allowfullscreen></iframe>
         <h4 class="text-xl mt-4 font-semibold">Dil Se 💖</h4>
         <p class="text-sm text-gray-400">#romantic #hindi</p>
       </div>
 
-      <!-- Song 2 - Telugu -->
       <div class="song-card bg-gray-900 p-4 rounded-lg shadow-lg" data-language="telugu">
         <iframe class="w-full rounded aspect-video" src="https://www.youtube.com/embed/03lNwmgqUnU" allowfullscreen></iframe>
         <h4 class="text-xl mt-4 font-semibold">Kopam marichanugaa 💘</h4>
         <p class="text-sm text-gray-400">#telugu #love</p>
       </div>
 
-      <!-- Song 3 - Tamil -->
       <div class="song-card bg-gray-900 p-4 rounded-lg shadow-lg" data-language="tamil">
         <iframe class="w-full rounded aspect-video" src="https://www.youtube.com/embed/xyz3" allowfullscreen></iframe>
         <h4 class="text-xl mt-4 font-semibold">Vinnaithaandi Varuvaayaa 🌧️</h4>
         <p class="text-sm text-gray-400">#tamil #arrahman</p>
       </div>
 
-      <!-- Hidden Songs -->
+      <!-- Hidden songs -->
       <div class="song-card bg-gray-900 p-4 rounded-lg shadow-lg hidden-card" data-language="hindi">
         <iframe class="w-full rounded aspect-video" src="https://www.youtube.com/embed/xyz4" allowfullscreen></iframe>
         <h4 class="text-xl mt-4 font-semibold">Tum Hi Ho 🎤</h4>
@@ -94,14 +89,23 @@
         <h4 class="text-xl mt-4 font-semibold">Nee Kallalona 🌸</h4>
         <p class="text-sm text-gray-400">#telugu #melody</p>
       </div>
-
     </div>
 
-    <!-- Load More -->
     <div class="text-center mt-8">
       <button id="loadMoreBtn" onclick="loadMoreSongs()" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded">
-        Load More
+        Load More Songs
       </button>
+    </div>
+
+    <!-- 📹 Auto-Fetched YouTube Shorts Section -->
+    <div class="mt-16">
+      <h2 class="text-2xl font-bold text-center mb-6 text-purple-400">🎥 Latest YouTube Shorts</h2>
+      <div id="youtube-videos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+      <div class="text-center mt-8">
+        <button id="loadMoreYTBtn" onclick="loadMoreYouTubeVideos()" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded">
+          Load More YouTube Shorts
+        </button>
+      </div>
     </div>
   </section>
 
@@ -110,10 +114,12 @@
     © <span id="year"></span> TuneWithVaish. All rights reserved.
   </footer>
 
-  <!-- JavaScript -->
+  <!-- ✅ Scripts -->
   <script>
+    // Set year
     document.getElementById("year").textContent = new Date().getFullYear();
 
+    // Song filtering
     function filterSongs(language) {
       const cards = document.querySelectorAll(".song-card");
       cards.forEach(card => {
@@ -127,7 +133,6 @@
     function searchSongs() {
       const input = document.getElementById("searchInput").value.toLowerCase();
       const cards = document.querySelectorAll(".song-card");
-
       cards.forEach(card => {
         const title = card.querySelector("h4").textContent.toLowerCase();
         const tags = card.querySelector("p").textContent.toLowerCase();
@@ -147,6 +152,61 @@
       hiddenCards.forEach(card => card.classList.remove("hidden-card"));
       document.getElementById("loadMoreBtn").style.display = "none";
     }
+
+    // YouTube Shorts Logic
+    const apiKey = "AIzaSyA471ltktjOqmk1cjYF0ITJ4DPoOnwqsoU";
+    const channelId = "UCNcsywTkO-tLMcEyRugIBUw";
+    const baseUrl = "https://www.googleapis.com/youtube/v3/search";
+    const allVideos = [];
+    const maxResults = 50;
+
+    async function fetchAllVideos(pageToken = "") {
+      const url = `${baseUrl}?key=${apiKey}&channelId=${channelId}&part=snippet,id&order=date&type=video&maxResults=${maxResults}` +
+                  (pageToken ? `&pageToken=${pageToken}` : "");
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        const videos = data.items.filter(item => item.id.kind === 'youtube#video');
+        allVideos.push(...videos);
+
+        if (data.nextPageToken) {
+          await fetchAllVideos(data.nextPageToken);  // Recursive
+        } else {
+          displayYouTubeVideos(6); // Initial load
+        }
+      } catch (error) {
+        console.error("Failed to fetch YouTube videos:", error);
+      }
+    }
+
+    function displayYouTubeVideos(count) {
+      const container = document.getElementById("youtube-videos");
+      container.innerHTML = "";
+      allVideos.slice(0, count).forEach(item => {
+        const videoHTML = `
+          <div class="bg-gray-900 p-4 rounded-lg shadow-lg">
+            <iframe class="w-full rounded aspect-video"
+              src="https://www.youtube.com/embed/${item.id.videoId}"
+              frameborder="0" allowfullscreen></iframe>
+            <h4 class="text-xl mt-4 font-semibold">${item.snippet.title}</h4>
+            <p class="text-sm text-gray-400">${item.snippet.publishedAt.slice(0, 10)}</p>
+          </div>
+        `;
+        container.innerHTML += videoHTML;
+      });
+
+      const loadBtn = document.getElementById("loadMoreYTBtn");
+      loadBtn.style.display = (count >= allVideos.length) ? "none" : "inline-block";
+    }
+
+    function loadMoreYouTubeVideos() {
+      displayYouTubeVideos(allVideos.length); // Show all
+    }
+
+    fetchAllVideos(); // Start on load
   </script>
+
 </body>
 </html>

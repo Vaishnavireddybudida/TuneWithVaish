@@ -8,10 +8,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
   <style>
-    body {
+    html, body {
       font-family: 'Poppins', sans-serif;
       background-color: #0f0f0f;
       overflow-x: hidden;
+      margin: 0;
+      padding: 0;
     }
     .blob {
       position: absolute;
@@ -20,17 +22,18 @@
       opacity: 0.6;
       animation: floatBlob 20s ease-in-out infinite;
       z-index: 0;
+      pointer-events: none;
     }
-    .blob1 { top: -100px; left: -100px; width: 300px; height: 300px; background: #ff00c8; animation-delay: 0s; }
-    .blob2 { bottom: -100px; right: -120px; width: 300px; height: 300px; background: #5200ff; animation-delay: 5s; }
-    .blob3 { top: 50%; left: 40%; width: 250px; height: 250px; background: #00ffd5; animation-delay: 10s; }
+    .blob1 { top: -100px; left: -50px; width: 250px; height: 250px; background: #ff00c8; animation-delay: 0s; }
+    .blob2 { bottom: -100px; right: -50px; width: 250px; height: 250px; background: #5200ff; animation-delay: 5s; }
+    .blob3 { top: 40%; left: 50%; transform: translate(-50%, -50%); width: 220px; height: 220px; background: #00ffd5; animation-delay: 10s; }
     @keyframes floatBlob {
       0%, 100% { transform: translateY(0px) scale(1); }
       50% { transform: translateY(-40px) scale(1.1); }
     }
   </style>
 </head>
-<body class="text-white relative">
+<body class="text-white relative overflow-x-hidden">
   <div class="blob blob1"></div>
   <div class="blob blob2"></div>
   <div class="blob blob3"></div>
@@ -51,7 +54,7 @@
   </nav>
 
   <!-- Hero Section -->
-  <section class="relative z-10 py-24 px-6 text-center">
+  <section class="relative z-10 py-24 px-6 text-center max-w-6xl mx-auto">
     <h1 class="text-4xl md:text-5xl font-extrabold text-white drop-shadow-xl animate-pulse" data-aos="fade-up">
       Feel the Music. Live the Vibe. 🎶
     </h1>
@@ -64,8 +67,9 @@
   </section>
 
   <!-- Features Section -->
-  <section class="py-16 bg-black px-6 lg:px-20 text-center" data-aos="fade-up">
-    <h2 class="text-3xl font-bold text-purple-300 mb-8">✨ Why TuneWithVaish?</h2>
+  <section class="py-16 bg-black px-6 lg:px-20 text-center max-w-6xl mx-auto" data-aos="fade-up">
+    <h2 class="text-3xl font-bold text-purple-300 mb-8">✨ Why TuneWithVaish?
+    </h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-gray-300">
       <div><h3 class="text-xl font-semibold mb-2">🎵 Language Variety</h3><p>Explore music in Hindi, Telugu, and Tamil.</p></div>
       <div><h3 class="text-xl font-semibold mb-2">📽️ YouTube Shorts</h3><p>Direct access to your favorite musical moments.</p></div>
@@ -74,7 +78,7 @@
   </section>
 
   <!-- Latest Uploads -->
-  <section class="bg-gray-950 py-16 px-6 lg:px-20" data-aos="fade-up">
+  <section class="bg-gray-950 py-16 px-6 lg:px-20 max-w-6xl mx-auto" data-aos="fade-up">
     <h2 class="text-3xl font-bold text-center text-purple-300 mb-8">🔥 Latest Uploads</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <div class="aspect-video">
@@ -87,8 +91,6 @@
         <iframe src="https://www.youtube.com/embed/xyz3" class="w-full h-full rounded" allowfullscreen></iframe>
       </div>
     </div>
-
-    <!-- Learn More Button -->
     <div class="text-center mt-8">
       <a href="about.html" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 shadow-md">
         Learn More
@@ -97,7 +99,7 @@
   </section>
 
   <!-- Newsletter -->
-  <section class="bg-black py-12 text-center" data-aos="fade-up">
+  <section class="bg-black py-12 text-center max-w-4xl mx-auto" data-aos="fade-up">
     <h2 class="text-2xl font-bold text-purple-400 mb-4">🎧 Stay Tuned with the Latest Beats!</h2>
     <form action="#" class="max-w-md mx-auto flex flex-col sm:flex-row gap-2">
       <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none" />
@@ -107,8 +109,7 @@
 
   <!-- Footer -->
   <footer class="relative z-10 bg-gray-900 text-center py-8 px-4 text-sm md:text-base" data-aos="fade-in">
-    <p class="text-gray-400 mb-2">
-      📧 Contact: <a href="mailto:vaishnavireddy818@gmail.com" class="text-purple-400 hover:underline">vaishnavireddy818@gmail.com</a>
+    <p class="text-gray-400 mb-2">📧 Contact: <a href="mailto:vaishnavireddy818@gmail.com" class="text-purple-400 hover:underline">vaishnavireddy818@gmail.com</a>
     </p>
     <p class="text-gray-400 mb-2">
       Follow us on
